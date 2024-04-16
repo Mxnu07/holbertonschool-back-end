@@ -5,8 +5,10 @@ import json
 import requests
 import sys
 
+"""Retrieves the employee's todos from the API"""
 employee_id = sys.argv[1]
 
+"""Retrieves the employee's todos from the API"""
 employee_data = requests.get('https://jsonplaceholder.typicode.com/users/' +
                              employee_id)
 employee_data_json = employee_data.json()
