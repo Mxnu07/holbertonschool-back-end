@@ -36,7 +36,6 @@ def export_todo_progress(employee_id):
         todo_data.append(task_dict)
 
     filename = f"{employee_id}.json"
-    todo_json = {str(employee_id): todo_data}
 
     with open(filename, mode="w") as jsonfile:
         json.dump(todo_json, jsonfile)
