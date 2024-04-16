@@ -38,7 +38,7 @@ def export_todo_progress(employee_id):
     filename = f"{employee_id}.json"
 
     with open(filename, mode="w") as jsonfile:
-        json.dump(todo_json, jsonfile)
+        json.dump(todo_data, jsonfile)
 
 
 if __name__ == "__main__":
