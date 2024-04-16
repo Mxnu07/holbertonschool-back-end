@@ -27,7 +27,7 @@ for user in users:
     task_list = [{'username': user_name, 'task': task.get(
         'title'), 'completed': task.get('completed')} for task in todo_list]
 
-all_tasks[user_id] = task_list
+    all_tasks[user_id] = task_list
 
 
 with open('todo_all_employees.json', 'w') as jsonfile:
