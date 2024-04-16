@@ -5,49 +5,43 @@ import requests
 import sys
 
 
-def get_employee_todos(employee_id):
-    """Retrieves the employee's todos from the API"""
-    url = f"https://jsonplaceholder.typicode.com/todos?userId={employee_id}"
-    response = requests.get(url)
-    todos = response.json()
-    return todos
+def todo_list(employee_id):
+    """
+    This function will fetch the URL, user info,
+    TODO list and display the employee progress
+    """
 
+    base_url = 'https://jsonplaceholder.typicode.com'
 
-def get_employee_name(employee_id):
-    """Retrieves the employee's name from the API"""
-    url = f"https://jsonplaceholder.typicode.com/users/{employee_id}"
-    response = requests.get(url)
-    employee = response.json()
-    return f"{employee.get('name')}"
+    user_response = requests.get(f'{base_url}/users/{employee_id}')
+    user_data = user_response.json()
+    user_id = user_data['id']
+    username = user_data['username']
 
+    todos_response = requests.get(f'{base_url}/todos?userId={employee_id}')
+    todos_data = todos_response.json()
 
-def export_todo_progress(employee_id):
-    """Exports the employee's TODO list progress in JSON format"""
-    todos = get_employee_todos(employee_id)
-    employee_name = get_employee_name(employee_id)
-    todo_data = []
+    tasks = [{"task": todo['title'], "completed":
+             todo['completed'], "username": username}
+             for todo in todos_data]
 
-    for task in todos:
-        task_dict = {
-            "task": task.get("title"),
-            "completed": task.get("completed"),
-            "username": employee_name,
-        }
-        todo_data.append(task_dict)
-
-    filename = f"{employee_id}.json"
-    todo_json = {str(employee_id): todo_data}
-
-    with open(filename, mode="w") as jsonfile:
-        json.dump(todo_json, jsonfile)
+    # Export data to JSON
+    filename = f'{user_id}.json'
+    with open(filename, 'w') as jsonfile:
+        json.dump({str(user_id): tasks}, jsonfile)
 
 
 if __name__ == "__main__":
-    if len(sys.argv) < 2:
-        print("Usage: python3 2-export_to_JSON.py <employee_id>")
-    else:
-        try:
-            employee_id = int(sys.argv[1])
-            export_todo_progress(employee_id)
-        except ValueError:
-            print("Employee ID must be an integer")
+    """Call the function"""
+
+    if len(sys.argv) != 2:
+        print("usage: python script.py <employee_id>")
+        sys.exit(1)
+
+    try:
+        employee_id = int(sys.argv[1])
+    except ValueError:
+        print("Employee ID must be an integer")
+        sys.exit(1)
+
+    todo_list(employee_id)
